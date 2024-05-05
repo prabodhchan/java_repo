@@ -1,0 +1,20 @@
+pipeline{
+    agent any
+        stages{
+            stage ('checkout code') {
+                steps{
+                    git branch:'main',url:'https://github.com/prabodhchan/java_repo.git'
+                }
+            }
+            stage('built code') {
+                steps{
+                    sh '/opt/maven/bin/mvn clean package'
+                }
+            }
+            stage('deployment') {
+                steps{
+                    deploy adapters:[tomcat9(url:'http://43.204.227.155:8080', credentialsId:'tomcat-creds')],war:'target/*.war'
+                }
+            }
+        }
+}
